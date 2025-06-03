@@ -4,7 +4,7 @@ This code example demonstrates the transmission of data from memory to memory us
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-ce241179-axidma-memorycopy)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDExNzkiLCJTcGVjIE51bWJlciI6IjAwMi00MTE3OSIsIkRvYyBUaXRsZSI6IlBETDogQVhJLURNQSBtZW1vcnkgY29weSIsInJpZCI6ImdzaGkiLCJEb2MgdmVyc2lvbiI6IjEuMC4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IkFVVE8iLCJEb2MgRmFtaWx5IjoiQVVUTyBNQ1UifQ==)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDExNzkiLCJTcGVjIE51bWJlciI6IjAwMi00MTE3OSIsIkRvYyBUaXRsZSI6IlBETDogQVhJLURNQSBtZW1vcnkgY29weSIsInJpZCI6ImdzaGkiLCJEb2MgdmVyc2lvbiI6IjEuMS4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IkFVVE8iLCJEb2MgRmFtaWx5IjoiQVVUTyBNQ1UifQ==)
 
 
 ## Requirements
@@ -307,6 +307,7 @@ Document title: *CE241179* – *PDL: AXI-DMA memory copy*
  Version | Description of change
  ------- | ---------------------
  1.0.0   |  New code example
+ 1.1.0   |  Changed version that not using device configurator
 <br>
 
 

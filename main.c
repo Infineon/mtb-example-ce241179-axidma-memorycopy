@@ -45,17 +45,22 @@
 #include "mtb_hal.h"
 #include <inttypes.h>
 
+/* For the AXI-DMA usage */
+#include "cy_axidmac.h"
 /*******************************************************************************
 * Macros
 *******************************************************************************/
+#define BUFFER_SIZE  (32ul)
 #define AXIDMAC_SW_TRIG (TRIG_OUT_MUX_13_AXIDMA_TR_IN0)
+#define AXIDMAC_INTR (AXIDMA_IRQ)
 #define AXIDMA_INTERRUPT_PRIORITY (7u)
 #define GPIO_INTERRUPT_PRIORITY (7u)
 #define DELAY_MS (1)
 
-/* Set number of data elements to transfer 128 (32*4) */
-#define BUFFER_SIZE  (32ul)
-
+/* For the AXI-DMA usage */
+#define AXIDMA_HW AXI_DMAC
+#define AXIDMA_CHANNEL 0U
+#define AXIDMA_IRQ axi_dmac_0_interrupts_0_IRQn
 /*******************************************************************************
 * Global Variables
 *******************************************************************************/
@@ -84,6 +89,48 @@ const cy_stc_sysint_t BTN_IRQ_CFG =
 static cy_stc_scb_uart_context_t    UART_context;           /** UART context */
 static mtb_hal_uart_t               UART_hal_obj;           /** Debug UART HAL object  */
 
+/* For the AXI-DMA usage */
+cy_stc_axidmac_descriptor_config_t AXIDMA_Descriptor_0_config =
+{
+    .retrigger = CY_AXIDMAC_RETRIG_IM,
+    .interruptType = CY_AXIDMAC_DESCR,
+    .triggerOutType = CY_AXIDMAC_DESCR,
+    .channelState = CY_AXIDMAC_CHANNEL_ENABLED,
+    .triggerInType = CY_AXIDMAC_DESCR,
+    .dataPrefetch = false,
+    .descriptorType = CY_AXIDMAC_1D_MEMORY_COPY,
+    .srcAddress = NULL,
+    .dstAddress = NULL,
+    /* Memory copy transfer: copying of M_COUNT+1 bytes from source addr to destination addr */
+    .mCount = BUFFER_SIZE*4,
+    .srcXincrement = 1,
+    .dstXincrement = 1,
+    .xCount = 1,
+    .srcYincrement = 1,
+    .dstYincrement = 1,
+    .yCount = 1,
+    .nextDescriptor = NULL,
+};
+CY_ALIGN(8) CY_SECTION(".cy_socmem_data") cy_stc_axidmac_descriptor_t AXIDMA_Descriptor_0 =
+{
+    .ctl = 0UL,
+    .src = 0UL,
+    .dst = 0UL,
+    .mSize = 0UL,
+    .xSize = 0UL,
+    .xIncr = 0UL,
+    .ySize = 0UL,
+    .yIncr = 0UL,
+    .nextPtr = 0UL,
+};
+cy_stc_axidmac_channel_config_t AXIDMA_channelConfig =
+{
+    .descriptor = &AXIDMA_Descriptor_0,
+    .priority = 3,
+    .enable = false,
+    .bufferable = false,
+};
+
 /* Data to be transferred */
 const static  uint32_t    srcBuffer[BUFFER_SIZE] =
 {0x10000000,0x10000001,0x10000002,0x10000003,
@@ -107,7 +154,6 @@ void HandleGPIOIntr(void);
 /*******************************************************************************
 * Function Implementations
 *******************************************************************************/
-
 /**********************************************************************************************************************
  * Function Name: HandleAXIDMACIntr*
  * Summary:
@@ -180,6 +226,7 @@ int main(void)
 
     /* Enable global interrupts */
     __enable_irq();
+
 
     SCB_DisableICache();
     SCB_DisableDCache();
